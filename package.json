@@ -15,6 +15,9 @@
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest watch"
   },
+  "prisma": {
+    "seed": "node prisma/seed.ts"
+  },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "prettier --write",
@@ -26,12 +29,14 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^6.14.2",
+    "@prisma/client": "^6.6.0",
     "@radix-ui/react-slot": "^1.2.0",
     "@shadcn/ui": "^0.0.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.487.0",
     "next": "15.3.0",
+    "query-string": "^9.1.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwind-merge": "^3.2.0",
@@ -54,6 +59,7 @@
     "lint-staged": "^15.5.0",
     "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.11",
+    "prisma": "^6.6.0",
     "tailwindcss": "^4",
     "typescript": "^5",
     "vitest": "^3.1.1"
