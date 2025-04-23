@@ -1,27 +1,25 @@
 import {
-  getGuestById,
   storeMessage,
   getRecentMessages,
   searchSimilarVectors,
   createEmbedding,
   generateAIResponse,
   storeVector,
-} from '@/services/guest';
+} from '@/services/chat';
+import { getGuestById, pushNewMessage } from '@/services/guest';
 import { NextResponse } from 'next/server';
-// import { currentUser } from '@clerk/nextjs/server';
+import { currentUser } from '@clerk/nextjs/server';
 import { generateSystemPrompt, generateUserPrompt } from '@/lib/utils';
 
 export async function POST(req: Request, { params }: { params: { chatId: string } }) {
   try {
-    // const user = await currentUser();
+    const user = await currentUser();
 
-    // if (!user || !user.firstName || !user.id)
-    //   return new NextResponse('Unauthorized!', { status: 401 });
+    if (!user) return new NextResponse('Unauthorized!', { status: 401 });
 
-    const userId = 'user_2p10000000000000000000000';
-
-    const { message } = await req.json();
+    const { prompt: message } = await req.json();
     const { chatId } = await params;
+
     const guest = await getGuestById(chatId);
 
     if (!guest) {
@@ -31,8 +29,9 @@ export async function POST(req: Request, { params }: { params: { chatId: string 
       return NextResponse.json({ error: 'Message is required' }, { status: 400 });
     }
 
-    const chatKey = `${guest.name.toLowerCase()}-${chatId}-${userId}`;
+    const chatKey = `${guest.name.toLowerCase()}-${chatId}-${user.id}`;
 
+    await pushNewMessage(message, 'user', chatId, user.id);
     await storeMessage(chatKey, '\n User:' + message + '\n');
 
     const newMessageEmbedding = await createEmbedding(message);
@@ -71,11 +70,9 @@ export async function POST(req: Request, { params }: { params: { chatId: string 
       content: cleanedOutput,
       type: 'system',
     });
+    await pushNewMessage(cleanedOutput, 'system', chatId, user.id);
 
-    return NextResponse.json(
-      { message: 'Message received', response: cleanedOutput },
-      { status: 200 }
-    );
+    return new Response(cleanedOutput, { status: 200 });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
