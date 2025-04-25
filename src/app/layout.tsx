@@ -4,6 +4,7 @@ import './globals.css';
 import { ClerkProvider } from '@clerk/nextjs';
 import Header from '@/components/header';
 import { Toaster } from '@/components/ui/sonner';
+import Image from 'next/image';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -28,7 +29,20 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} relative min-h-screen antialiased`}
+        >
+          <div className="fixed inset-0 -z-10">
+            <Image
+              src="/images/full-bg.jpg"
+              alt="Background"
+              fill
+              priority
+              quality={100}
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-black opacity-60" />
+          </div>
           <Header />
           <main>{children}</main>
           <Toaster />

@@ -10,12 +10,17 @@ import { getGuestById, pushNewMessage } from '@/services/guest';
 import { NextResponse } from 'next/server';
 import { currentUser } from '@clerk/nextjs/server';
 import { generateSystemPrompt, generateUserPrompt } from '@/lib/utils';
+import { ratelimit } from '@/lib/rate-limit';
 
 export async function POST(req: Request, { params }: { params: { chatId: string } }) {
   try {
     const user = await currentUser();
 
     if (!user) return new NextResponse('Unauthorized!', { status: 401 });
+
+    const { success } = await ratelimit(user.id);
+
+    if (!success) return new NextResponse('Rate limit exceeded!', { status: 429 });
 
     const { prompt: message } = await req.json();
     const { chatId } = await params;

@@ -71,8 +71,12 @@ const generateAIResponse = async (
   systemPrompt: string,
   replicateService = ReplicateService.getInstance()
 ) => {
-  const response = await replicateService.generateText(prompt, systemPrompt);
-  return response;
+  try {
+    const response = await replicateService.generateText(prompt, systemPrompt);
+    return response;
+  } catch (error) {
+    throw new Error('Failed to generate AI response', { cause: error });
+  }
 };
 
 export {

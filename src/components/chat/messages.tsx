@@ -4,14 +4,19 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Guest } from '@prisma/client';
 
 import ChatMessage, { ChatMessageProps } from '@/components/chat/message';
-
 interface ChatMessagesProps {
   messages: ChatMessageProps[];
   isLoading: boolean;
   guest: Guest;
+  userImageUrl: string;
 }
 
-export default function ChatMessages({ guest, isLoading, messages }: ChatMessagesProps) {
+export default function ChatMessages({
+  guest,
+  isLoading,
+  messages,
+  userImageUrl,
+}: ChatMessagesProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const [fakeLoading, setFakeLoading] = useState(messages.length === 0 ? true : false);
@@ -31,7 +36,7 @@ export default function ChatMessages({ guest, isLoading, messages }: ChatMessage
   }, [messages.length]);
 
   return (
-    <div className="flex-1 overflow-y-auto pr-4">
+    <div className="mt-4 h-[500px] flex-1 overflow-y-auto pr-4">
       <ChatMessage
         isLoading={fakeLoading}
         src={guest.imgUrl}
@@ -44,6 +49,7 @@ export default function ChatMessages({ guest, isLoading, messages }: ChatMessage
           role={message.role}
           content={message.content}
           src={guest.imgUrl}
+          userImage={userImageUrl}
         />
       ))}
       {isLoading && <ChatMessage role="system" src={guest.imgUrl} isLoading />}

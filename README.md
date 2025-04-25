@@ -1,36 +1,143 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# The Symposium: AI Chat Companion with RAG
 
-## Getting Started
+![Chat Interface](https://res.cloudinary.com/dgkjzoae8/image/upload/v1745604752/chat-page_o788ok.png)
 
-First, run the development server:
+## 📌 Project Description
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+I built an AI chat companion inspired by Plato's Symposium for philosophy enthusiasts to engage in meaningful conversations about love, wisdom, and human nature. The system leverages Retrieval-Augmented Generation (RAG) to provide personalized and context-aware conversations, integrating Replicate for AI model inference, Pinecone for conversation memory and context storage, and Redis for real-time chat state management and caching.
+
+## 🔄 How It Works
+
+### 1. User Authentication & Session Management
+
+- Users authenticate via Clerk.js
+- Session data is stored in Redis for real-time state management
+- User preferences and history are persisted in Supabase
+
+### 2. Conversation Flow
+
+1. **Message Reception**
+
+   - User sends a message through the chat interface
+   - Message is temporarily stored in Redis for real-time updates
+   - Message is processed for context retrieval
+
+2. **Context Retrieval (RAG Pipeline)**
+
+   - Message is converted to embeddings using OpenAI's API
+   - Pinecone performs semantic search to find relevant conversation context
+   - Top-k most relevant context is retrieved based on similarity scores
+
+3. **AI Response Generation**
+
+   - Retrieved context is combined with the user's message
+   - llama-2-7b-chat model processes the enriched prompt
+   - Response is generated with context-aware insights
+
+4. **Response Processing**
+   - Generated response is streamed back to the user
+   - Conversation context is updated in Pinecone
+   - Message history is stored in Supabase for persistence
+
+### 3. Technical Architecture
+
+```ascii
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│   Client    │     │   Server    │     │   Storage   │
+├─────────────┤     ├─────────────┤     ├─────────────┤
+│ Next.js App │     │ API Routes  │     │  Supabase   │
+│ Clerk Auth  │◄───►│ Replicate   │◄───►│  Pinecone   │
+│ Real-time UI│     │ OpenAI API  │     │   Redis     │
+└─────────────┘     └─────────────┘     └─────────────┘
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ⚒️ Tech Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Framework**: React + Next.js
+- **Data Fetching**: Fetch
+- **Styling**: Tailwind CSS
+- **Component Library**: Shadcn
+- **ORM**: Prisma
+- **AI & Storage**:
+  - OpenAI API
+  - llama-2-7b-chat
+  - Replicate (AI model inference)
+  - Pinecone (conversation memory & context)
+  - Redis (real-time state & caching)
+  - Supabase (permanent storage)
+- **Test**:
+  - Vitest
+  - Testing Library
+- **Auth**:
+  - Clerk.js
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📦 Integration with AI Services
 
-## Learn More
+The project integrates three main external services:
 
-To learn more about Next.js, take a look at the following resources:
+1. **Replicate**: Handles AI chat interactions
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   - Message processing
+   - Context-aware responses
+   - Streaming chat updates
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. **Pinecone**: Manages conversation memory and context
 
-## Deploy on Vercel
+   - Chat history storage
+   - Context retrieval
+   - Conversation vectorization
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Approach
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Created a High-Level Design System
+2. Designed chat interface mockups
+3. Integrated AI services
+4. Implemented RAG pipeline for context-aware responses
+5. Developed real-time chat components
+
+## High-Level Design System
+
+### Functional Requirements
+
+- Real-time chat interface
+- Context-aware responses
+- Conversation history management
+- Session persistence
+- Rate limiting and moderation
+
+## Interface Definition (API)
+
+Required HTTP APIs:
+
+- **Chat**:
+
+  - Send messages
+  - Stream responses
+  - Manage conversation context
+
+- **Conversations**:
+
+  - List conversations
+  - Retrieve conversation history
+
+## Optimizations and Deep Dive
+
+- **Performance Optimizations**:
+
+  - Optimize message streaming
+  - Efficient context retrieval
+  - Real-time updates
+
+## Things to Improve
+
+1. Implement advanced conversation context management
+2. Add support for multimedia messages
+
+## What's Next
+
+1. Implement voice chat capabilities
+2. Add support for group conversations
+3. Delete conversations
+4. Upload more characters
+5. Upload to vercel
+6. Create the API services with FastAPI

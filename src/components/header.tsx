@@ -15,12 +15,12 @@ const Header = () => {
         <div className="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between">
           <Link href="/" className="flex items-center">
             <span
-              className={`${underdog.className} self-center text-xl font-semibold whitespace-nowrap dark:text-white`}
+              className={`${underdog.className} self-center text-xl font-semibold whitespace-nowrap text-white`}
             >
               Platón: El Banquete
             </span>
           </Link>
-          <div className="flex items-center lg:order-2">
+          <div className="flex items-center text-white lg:order-2">
             <SignedOut>
               <SignInButton />
               <span className="mx-2">|</span>

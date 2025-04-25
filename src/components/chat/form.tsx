@@ -19,16 +19,21 @@ interface ChatFormProps {
 
 export default function ChatForm({ handleInputChange, input, isLoading, onSubmit }: ChatFormProps) {
   return (
-    <form onSubmit={onSubmit} className="border-primary/10 flex items-center gap-x-2 border-t py-4">
+    <form
+      data-testid="chat-form"
+      onSubmit={onSubmit}
+      className="flex items-center gap-x-2 border-t border-white/40 py-4"
+    >
       <Input
+        data-testid="chat-input"
         disabled={isLoading}
         value={input}
         onChange={handleInputChange}
         placeholder="Type a message"
-        className="bg-primary/10 rounded-lg"
+        className="rounded-lg bg-white"
       />
-      <Button disabled={isLoading} variant="ghost">
-        <SendHorizonal className="h-6 w-6" />
+      <Button disabled={isLoading} variant="ghost" data-testid="chat-send-button">
+        <SendHorizonal className="h-6 w-6 text-white" />
       </Button>
     </form>
   );

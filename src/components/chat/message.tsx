@@ -14,9 +14,16 @@ export interface ChatMessageProps {
   content?: string;
   isLoading?: boolean;
   src?: string;
+  userImage?: string;
 }
 
-export default function ChatMessage({ role, content, isLoading, src }: ChatMessageProps) {
+export default function ChatMessage({
+  role,
+  content,
+  isLoading,
+  src,
+  userImage,
+}: ChatMessageProps) {
   const onCopy = () => {
     if (!content) return;
 
@@ -26,19 +33,20 @@ export default function ChatMessage({ role, content, isLoading, src }: ChatMessa
 
   return (
     <div
+      data-testid="message-container"
       className={cn('group flex w-full items-start gap-x-3 py-4', role === 'user' && 'justify-end')}
     >
       {role !== 'user' && src && (
-        <Avatar>
+        <Avatar data-testid="guest-avatar">
           <AvatarImage src={src} />
         </Avatar>
       )}
-      <div className="bg-primary/10 max-w-sm rounded-md px-4 py-2 text-sm">
-        {isLoading ? <BeatLoader size={5} color="black" /> : content}
+      <div className="max-w-sm rounded-md bg-white px-4 py-2 text-sm">
+        {isLoading ? <BeatLoader data-testid="loading-spinner" size={5} color="black" /> : content}
       </div>
       {role === 'user' && (
-        <Avatar>
-          <AvatarImage src={src} />
+        <Avatar data-testid="user-avatar">
+          <AvatarImage src={userImage} />
         </Avatar>
       )}
       {role !== 'user' && (

@@ -1,14 +1,34 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, act } from '@testing-library/react';
 import Home from '../app/page';
-import { getGuests } from '../services/guest';
+import { getAllGuests } from '../services/guest';
 import type { Guest } from '@prisma/client';
 
-vi.mock('@/services/guest', () => ({
-  getGuests: vi.fn(),
+vi.mock('next/font/google', () => ({
+  Underdog: () => ({
+    className: 'underdog-font',
+    style: { fontFamily: 'Underdog' },
+  }),
 }));
+
+vi.mock('embla-carousel-react', () => {
+  const useEmblaCarousel = () => [{ current: null }];
+
+  return {
+    default: useEmblaCarousel,
+    useEmblaCarousel,
+  };
+});
+
+vi.mock('@/services/guest', () => ({
+  getAllGuests: vi.fn(),
+}));
+
+const mockPush = vi.fn();
 vi.mock('next/navigation', () => ({
-  useRouter: vi.fn(),
+  useRouter: () => ({
+    push: mockPush,
+  }),
 }));
 
 const mockGuests: (Guest & { _count: { messages: number } })[] = [
@@ -22,6 +42,7 @@ const mockGuests: (Guest & { _count: { messages: number } })[] = [
     seed: 'Human: Hello, how are you?',
     createdAt: new Date(),
     updatedAt: new Date(),
+    virtues: ['wisdom', 'courage', 'temperance', 'justice'],
     _count: {
       messages: 0,
     },
@@ -35,6 +56,7 @@ const mockGuests: (Guest & { _count: { messages: number } })[] = [
     seed: 'Human: Hello, how are you?',
     createdAt: new Date(),
     updatedAt: new Date(),
+    virtues: ['wisdom', 'courage', 'temperance', 'justice'],
     _count: {
       messages: 0,
     },
@@ -46,17 +68,30 @@ describe('Home', () => {
     vi.clearAllMocks();
   });
 
-  it('should render the guest cards', async () => {
-    vi.mocked(getGuests).mockResolvedValueOnce(mockGuests);
+  it('should render the guest cards with all information', async () => {
+    vi.mocked(getAllGuests).mockResolvedValueOnce(mockGuests);
 
     await act(async () => {
       render(await Home());
     });
 
-    const guestCards = await screen.findAllByRole('article');
-
+    const guestCards = await screen.findAllByTestId('guest-card');
     expect(guestCards).toHaveLength(2);
+
     expect(screen.getByText('Fedro')).toBeInTheDocument();
+    expect(
+      screen.getByText("You are Phaedrus from Plato's The Symposium (or The Banquet).")
+    ).toBeInTheDocument();
+    expect(screen.getByAltText('Fedro')).toHaveAttribute(
+      'src',
+      expect.stringContaining('i.pravatar.cc')
+    );
+
     expect(screen.getByText('Pausanias')).toBeInTheDocument();
+    expect(screen.getByText('You are Pausanias.')).toBeInTheDocument();
+    expect(screen.getByAltText('Pausanias')).toHaveAttribute(
+      'src',
+      expect.stringContaining('i.pravatar.cc')
+    );
   });
 });

@@ -1,6 +1,6 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
-const { PrismaClient } = require('@prisma/client');
-const guestsSeed = require('./seed/guest.json');
+import { PrismaClient } from '@prisma/client';
+import guestsSeed from './seed/guest.json';
+
 const prisma = new PrismaClient();
 
 async function main() {
