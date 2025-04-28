@@ -1,6 +1,6 @@
 # The Symposium: AI Chat Companion with RAG
 
-![Chat Interface](<https://res.cloudinary.com/dgkjzoae8/image/upload/v1745604752/chat-page_o788ok.png>)
+![Chat Interface](/public/images/chat-page.png)
 
 ## 📌 Project Description
 
